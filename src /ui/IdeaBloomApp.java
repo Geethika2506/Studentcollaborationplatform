@@ -62,6 +62,23 @@ public class IdeaBloomApp extends Application {
             openChatWindow(selected);
         });
 
+        Button viewMembersButton = new Button("View members of selected project");
+        viewMembersButton.setOnAction(e -> {
+            Project selected = projectListView.getSelectionModel().getSelectedItem();
+            if (selected == null) {
+                System.out.println("Please select a project first.");
+                return;
+            }
+            openMembersWindow(selected);
+        });
+
+        // NEW: export button
+        Button exportButton = new Button("Export projects to file");
+        exportButton.setOnAction(e -> {
+            projectManager.exportProjectsToFile("projects_export.txt");
+            System.out.println("Projects exported to projects_export.txt");
+        });
+
         VBox root = new VBox(10);
         root.getChildren().addAll(
                 titleLabel,
@@ -69,10 +86,12 @@ public class IdeaBloomApp extends Application {
                 titleField,
                 descriptionField,
                 createProjectButton,
-                openChatButton
+                openChatButton,
+                viewMembersButton,
+                exportButton
         );
 
-        Scene scene = new Scene(root, 450, 400);
+        Scene scene = new Scene(root, 480, 430);
         stage.setTitle("Idea Bloom");
         stage.setScene(scene);
         stage.show();
@@ -118,7 +137,54 @@ public class IdeaBloomApp extends Application {
         }
     }
 
+    private void openMembersWindow(Project project) {
+        Stage membersStage = new Stage();
+        membersStage.setTitle("Members - " + project.getTitle());
+
+        ListView<String> membersView = new ListView<>();
+        TextField nameField = new TextField();
+        nameField.setPromptText("Student name");
+
+        TextField emailField = new TextField();
+        emailField.setPromptText("Student email");
+
+        Button addMemberButton = new Button("Add member");
+
+        // show current members
+        refreshMembers(membersView, project);
+
+        addMemberButton.setOnAction(e -> {
+            String name = nameField.getText();
+            String email = emailField.getText();
+
+            if (name.isBlank() || email.isBlank()) {
+                System.out.println("Name and email cannot be empty");
+                return;
+            }
+
+            Student newMember = new Student(name, email);
+            project.addMember(newMember);
+            refreshMembers(membersView, project);
+
+            nameField.clear();
+            emailField.clear();
+        });
+
+        VBox root = new VBox(10, membersView, nameField, emailField, addMemberButton);
+        Scene scene = new Scene(root, 320, 280);
+        membersStage.setScene(scene);
+        membersStage.show();
+    }
+
+    private void refreshMembers(ListView<String> membersView, Project project) {
+        membersView.getItems().clear();
+        for (Student s : project.getMembers()) {
+            membersView.getItems().add(s.getName());
+        }
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
 }
+
