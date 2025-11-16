@@ -8,15 +8,16 @@ public class Project {
     private String description;
     private Student creator;
     private ArrayList<Student> members;
+    private ChatRoom chatRoom;
 
     public Project(String title, String description, Student creator) {
         this.title = title;
         this.description = description;
         this.creator = creator;
         this.members = new ArrayList<>();
+        this.members.add(creator);  // creator is automatically a member
 
-        // creator is automatically a member
-        this.members.add(creator);
+        this.chatRoom = new ChatRoom(); // create a chat for this project
     }
 
     public String getTitle() {
@@ -37,5 +38,9 @@ public class Project {
 
     public void addMember(Student s) {
         members.add(s);
+    }
+
+    public ChatRoom getChatRoom() {
+        return chatRoom;
     }
 }
