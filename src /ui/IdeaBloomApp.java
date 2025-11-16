@@ -12,6 +12,7 @@ import model.Message;
 import model.Project;
 import model.Student;
 import service.ProjectManager;
+import javafx.scene.control.ComboBox;
 
 public class IdeaBloomApp extends Application {
 
@@ -105,9 +106,25 @@ public class IdeaBloomApp extends Application {
         Stage chatStage = new Stage();
         chatStage.setTitle("Chat - " + project.getTitle());
 
+        // list of messages
         ListView<String> messagesView = new ListView<>();
+
+        // choose which member is speaking
+        ComboBox<Student> senderBox = new ComboBox<>();
+        senderBox.getItems().addAll(project.getMembers());
+        // try to select the logged-in student by default
+        if (project.getMembers().contains(currentStudent)) {
+            senderBox.getSelectionModel().select(currentStudent);
+        } else if (!project.getMembers().isEmpty()) {
+            senderBox.getSelectionModel().selectFirst();
+        }
+
+        senderBox.setPromptText("Select sender");
+
+        // message input
         TextField messageField = new TextField();
         messageField.setPromptText("Type a message");
+
         Button sendButton = new Button("Send");
 
         // fill messages initially
@@ -119,16 +136,23 @@ public class IdeaBloomApp extends Application {
                 return;
             }
 
-            project.getChatRoom().addMessage(new Message(currentStudent, text));
+            Student sender = senderBox.getSelectionModel().getSelectedItem();
+            if (sender == null) {
+                // fall back to currentStudent if nothing selected
+                sender = currentStudent;
+            }
+
+            project.getChatRoom().addMessage(new Message(sender, text));
             messageField.clear();
             refreshMessages(messagesView, project);
         });
 
-        VBox root = new VBox(10, messagesView, messageField, sendButton);
-        Scene scene = new Scene(root, 400, 300);
+        VBox root = new VBox(10, messagesView, senderBox, messageField, sendButton);
+        Scene scene = new Scene(root, 400, 320);
         chatStage.setScene(scene);
         chatStage.show();
     }
+
 
     private void refreshMessages(ListView<String> messagesView, Project project) {
         messagesView.getItems().clear();

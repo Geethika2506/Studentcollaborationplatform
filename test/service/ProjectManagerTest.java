@@ -42,4 +42,17 @@ public class ProjectManagerTest {
 
         assertNull(result);
     }
+
+    @Test
+    public void testAddProjectStoresSameInstance() {
+        ProjectManager manager = new ProjectManager();
+        Student creator = new Student("Juliette", "juliette@example.com");
+        Project p = new Project("Same Instance", "Check reference", creator);
+
+        manager.addProject(p);
+
+        Project found = manager.findByTitle("Same Instance");
+        assertSame(p, found);
+    }
+
 }
