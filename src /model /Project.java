@@ -43,4 +43,10 @@ public class Project {
     public ChatRoom getChatRoom() {
         return chatRoom;
     }
+
+    @Override
+    public String toString() {
+        return title + " (by " + creator.getName() + ")";
+    }
 }
+
