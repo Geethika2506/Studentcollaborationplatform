@@ -1,59 +1,110 @@
 import model.Student;
-import model.Instructor;
-import model.Admin;
 import model.Project;
 import model.ChatRoom;
 import model.Message;
 import service.ProjectManager;
 
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
 
-        // Create users
-        Student s = new Student("Juliette", "jjanne.ieu2023@student.ie.edu");
-        Instructor i = new Instructor("Andrea", "amontana.ieu2023@student.ie.edu");
-        Admin a = new Admin("Admin", "admin@email.com");
+        Scanner scanner = new Scanner(System.in);
 
-        // Create a project manager
+        // Simulate logged-in student (you)
+        Student currentStudent = new Student("Juliette", "jjanne.ieu2023@student.ie.edu");
+
+        // Manager to store all projects
         ProjectManager projectManager = new ProjectManager();
 
-        // Create a project
-        Project p = new Project(
-                "CP Study Group",
-                "A group to practice competitive programming problems.",
-                s // creator is Juliette
-        );
+        boolean running = true;
 
-        // Add another member
-        Student g = new Student("Geethika", "gkonda.ieu2023@student.ie.edu");
-        p.addMember(g);
+        while (running) {
+            System.out.println("\n=== Idea Bloom ===");
+            System.out.println("Logged in as: " + currentStudent.getName());
+            System.out.println("1) Create new project");
+            System.out.println("2) List all projects");
+            System.out.println("3) Open first project chat (demo)");
+            System.out.println("0) Exit");
+            System.out.print("Choose an option: ");
 
-        // Store the project in the manager
-        projectManager.addProject(p);
+            String choice = scanner.nextLine();
 
-        // List all projects
-        System.out.println("All projects in the system:");
-        for (Project proj : projectManager.getProjects()) {
-            System.out.println("- " + proj.getTitle() + " (creator: " + proj.getCreator().getName() + ")");
+            switch (choice) {
+                case "1":
+                    createProject(scanner, projectManager, currentStudent);
+                    break;
+                case "2":
+                    listProjects(projectManager);
+                    break;
+                case "3":
+                    openChatDemo(scanner, projectManager, currentStudent);
+                    break;
+                case "0":
+                    running = false;
+                    System.out.println("Goodbye!");
+                    break;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+            }
         }
-        System.out.println();
 
-        // ---- Simple chat demo ----
-        ChatRoom chat = p.getChatRoom();
+        scanner.close();
+    }
 
-        chat.addMessage(new Message(s, "Hey team! Welcome to the CP Study Group."));
-        chat.addMessage(new Message(g, "Hi! Excited to start solving problems."));
-        chat.addMessage(new Message(a, "Reminder: keep the chat friendly and on-topic."));
+    private static void createProject(Scanner scanner,
+                                      ProjectManager projectManager,
+                                      Student creator) {
+        System.out.print("Enter project title: ");
+        String title = scanner.nextLine();
 
-        System.out.println("Chat for project: " + p.getTitle());
+        System.out.print("Enter project description: ");
+        String description = scanner.nextLine();
+
+        Project project = new Project(title, description, creator);
+        projectManager.addProject(project);
+
+        System.out.println("Project '" + title + "' created successfully!");
+    }
+
+    private static void listProjects(ProjectManager projectManager) {
+        System.out.println("\n--- All Projects ---");
+        if (projectManager.getProjects().isEmpty()) {
+            System.out.println("No projects yet.");
+            return;
+        }
+
+        for (Project p : projectManager.getProjects()) {
+            System.out.println("- " + p.getTitle() +
+                    " (creator: " + p.getCreator().getName() + ")");
+        }
+    }
+
+    // Very simple chat demo: uses the first project in the list
+    private static void openChatDemo(Scanner scanner,
+                                     ProjectManager projectManager,
+                                     Student currentStudent) {
+        if (projectManager.getProjects().isEmpty()) {
+            System.out.println("No projects available. Create one first.");
+            return;
+        }
+
+        Project first = projectManager.getProjects().get(0);
+        ChatRoom chat = first.getChatRoom();
+
+        System.out.println("\n--- Chat for project: " + first.getTitle() + " ---");
+
+        // Show existing messages
         for (Message m : chat.getMessages()) {
             System.out.println(m.getSender().getName() + ": " + m.getContent());
         }
 
-        // Example of findByTitle
-        Project found = projectManager.findByTitle("CP Study Group");
-        if (found != null) {
-            System.out.println("\nFound project by title: " + found.getTitle());
+        System.out.print("Type a message (or just press Enter to go back): ");
+        String content = scanner.nextLine();
+
+        if (!content.isBlank()) {
+            chat.addMessage(new Message(currentStudent, content));
+            System.out.println("Message sent.");
         }
     }
 }
