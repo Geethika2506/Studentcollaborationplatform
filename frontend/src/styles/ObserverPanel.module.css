@@ -1,0 +1,23 @@
+.panel {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+  background-color: #fafafa;
+}
+
+.panel h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.user-list {
+  list-style: none;
+  padding: 0;
+}
+
+.user-list li {
+  padding: 4px 0;
+  display: flex;
+  justify-content: space-between;
+}

@@ -1,0 +1,102 @@
+/* ProjectList.css - Place this in src/styles/ folder */
+
+.project-list-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.list-header h2 {
+  color: #2c3e50;
+  font-size: 2rem;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filter-bar button {
+  padding: 0.5rem 1rem;
+  border: 2px solid #ecf0f1;
+  background: white;
+  color: #7f8c8d;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.filter-bar button:hover {
+  border-color: #3498db;
+  color: #3498db;
+}
+
+.filter-bar button.active {
+  background-color: #3498db;
+  color: white;
+  border-color: #3498db;
+}
+
+.full-badge {
+  background-color: #e74c3c;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.btn-join {
+  width: 100%;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.btn-join:hover {
+  background-color: #2980b9;
+}
+
+.btn-view {
+  width: 100%;
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.btn-view:hover {
+  background-color: #229954;
+}
+
+.btn-disabled {
+  width: 100%;
+  background-color: #95a5a6;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 4px;
+  cursor: not-allowed;
+  font-size: 1rem;
+}
